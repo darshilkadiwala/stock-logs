@@ -1,0 +1,14 @@
+{
+  "cSpell.words": ["ianvs", "isbot", "oklch", "shadcn", "lucide", "clsx"],
+  "editor.codeActionsOnSave": { "source.organizeImports": "always" },
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "files.autoSave": "onFocusChange",
+  "tailwindCSS.classFunctions": ["cva", "cn", "clsx", "classNames"],
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["clsx\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["\\b\\w*([cC]lass)([nN]ame)?(s|es|[lL]ist)?\\b", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
+}

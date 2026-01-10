@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "bradlc.vscode-tailwindcss",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-complete-tag",
+    "fractalbrew.backticks",
+    "github.copilot-chat",
+    "github.copilot",
+    "gruntfuggly.todo-tree",
+    "kevinkyang.auto-comment-blocks",
+    "mhutchie.git-graph",
+    "mikestead.dotenv",
+    "steoates.autoimport",
+    "streetsidesoftware.code-spell-checker",
+    "stringham.copy-with-imports",
+    "usernamehw.errorlens",
+    "yoavbls.pretty-ts-errors"
+  ]
+}

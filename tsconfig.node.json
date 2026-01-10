@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "types": ["node"],
+    "composite": true,
+    "noEmit": true
+  },
+  "include": ["vite.config.ts", "react-router.config.ts", "prettier.config.js"]
+}

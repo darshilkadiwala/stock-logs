@@ -1,7 +1,8 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import { ThemeProvider } from '@/providers/theme-provider';
+
 import type { Route } from './+types/root';
-import { ThemeProvider } from './components/theme-provider';
 
 import './app.css';
 

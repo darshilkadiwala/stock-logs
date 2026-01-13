@@ -19,12 +19,8 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { navigationItems } from '@/lib/navigation';
+import { user } from '@/lib/user';
 import { useNavigation, type NavigationItem } from '@/providers/navigation-provider';
-
-const user = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-};
 
 function NavigationMenuItem({ item }: { item: NavigationItem }) {
   const { isActive } = useNavigation();

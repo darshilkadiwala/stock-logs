@@ -12,7 +12,7 @@ export function BaseLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <SidebarInset>
           <SiteHeader />
-          <main className='flex grow flex-col px-5 pt-2 pb-6 md:px-6 lg:px-8 lg:pb-8'>{children}</main>
+          <main className='flex grow flex-col px-5 pt-2 pb-6 md:px-6 md:pt-4 lg:px-8 lg:pb-8'>{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </NavigationProvider>

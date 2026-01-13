@@ -1,3 +1,5 @@
+import { user } from '@/lib/user';
+
 import type { Route } from './+types/dashboard';
 
 export function meta({}: Route.MetaArgs): Route.MetaDescriptors {
@@ -8,5 +10,13 @@ export function meta({}: Route.MetaArgs): Route.MetaDescriptors {
 }
 
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  const firstName = user.name.split(' ')[0];
+
+  return (
+    <div className=''>
+      <h1 className='text-primary text-2xl tracking-tight'>
+        Welcome back, <span className='font-bold'>{firstName}!</span>
+      </h1>
+    </div>
+  );
 }

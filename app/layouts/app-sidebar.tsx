@@ -1,14 +1,6 @@
 import { Link } from 'react-router';
 
-import {
-  CalendarClockIcon,
-  ChartScatterIcon,
-  ChartSplineIcon,
-  EllipsisVerticalIcon,
-  PlusCircleIcon,
-  PresentationIcon,
-  Settings2Icon,
-} from 'lucide-react';
+import { ChartSplineIcon, EllipsisVerticalIcon, PlusCircleIcon } from 'lucide-react';
 
 import { MarketHoursClock } from '@/components/market-hours-clock';
 import {
@@ -21,20 +13,52 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-
-const mainNavigation = [
-  { title: 'Dashboard', url: '/', icon: PresentationIcon },
-  { title: 'Analytics', url: '/analytics', icon: ChartScatterIcon },
-  { title: 'Trade History', url: '/history', icon: CalendarClockIcon },
-  { title: 'Settings', url: '/settings', icon: Settings2Icon },
-];
+import { navigationItems } from '@/lib/navigation';
+import { useNavigation, type NavigationItem } from '@/providers/navigation-provider';
 
 const user = {
   name: 'John Doe',
   email: 'john.doe@example.com',
 };
+
+function NavigationMenuItem({ item }: { item: NavigationItem }) {
+  const { isActive } = useNavigation();
+  const active = isActive(item.url);
+
+  // Resolve parent URL for nested items (needed for relative child URLs)
+  // Use the same resolution logic: relative URLs resolve relative to root
+  const parentResolvedUrl = item.url.startsWith('/') ? item.url : `/${item.url}`;
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton tooltip={item.title} isActive={active} asChild>
+        <Link to={item.url}>
+          {item.icon && <item.icon />}
+          <span>{item.title}</span>
+        </Link>
+      </SidebarMenuButton>
+      {item.children && item.children.length > 0 && (
+        <SidebarMenuSub>
+          {item.children.map((child) => (
+            <SidebarMenuSubItem key={child.url}>
+              <SidebarMenuSubButton isActive={isActive(child.url, parentResolvedUrl)} asChild>
+                <Link to={child.url}>
+                  {child.icon && <child.icon />}
+                  <span>{child.title}</span>
+                </Link>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          ))}
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuItem>
+  );
+}
 
 export function AppSidebar() {
   return (
@@ -70,18 +94,11 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarSeparator />
-        <SidebarGroup>
+        <SidebarGroup className='-mt-2'>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavigation.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton tooltip={item.title} asChild>
-                    <Link to={item.url}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              {navigationItems.map((item) => (
+                <NavigationMenuItem key={item.url} item={item} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

@@ -1,5 +1,6 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import { BaseLayout } from '@/layouts/base-layout';
 import { ThemeProvider } from '@/providers/theme-provider';
 
 import type { Route } from './+types/root';
@@ -29,7 +30,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <BaseLayout>{children}</BaseLayout>
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

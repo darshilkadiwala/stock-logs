@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import type { ClassValue } from 'clsx';
 
@@ -61,4 +61,50 @@ export interface WithExtra {
    * Additional UI content, e.g., a badge, link, or action button.
    */
   extra?: ReactNode;
+}
+
+/**
+ * A base type for any option-like item with a label and a value.
+ *
+ * @template V The type of the value (default is string).
+ *
+ * @example
+ * const option: LabelValueOption = { label: 'Admin', value: 'admin' };
+ */
+export interface LabelValueOption<V = string> {
+  /**
+   * The visible label (can be text or a React node).
+   */
+  label?: ReactNode;
+  /**
+   * The actual value of the option (e.g., string, number, enum).
+   */
+  value: V;
+}
+
+/**
+ * A full option type used for menus, dropdowns, and command palettes.
+ * Includes optional leading and trailing nodes for icons, badges, shortcuts, etc.
+ *
+ * @template V The type of the option's value.
+ *
+ * @example
+ * const option: Option = {
+ *   label: 'Settings',
+ *   value: 'settings',
+ *   leading: <SettingsIcon />,
+ *   trailing: <kbd>⌘S</kbd>,
+ * };
+ */
+export interface Option<V = string> extends LabelValueOption<V> {
+  /**
+   * Content shown before the label, such as an icon, avatar, etc.
+   * - Want to send numbers here? convert them to strings.
+   */
+  leading?: ReactElement | string;
+  /**
+   * Content shown after the label, such as a keyboard shortcut, badge, icons, or status dot, etc.
+   * - Want to send numbers here? convert them to strings.
+   */
+  trailing?: ReactElement | string;
 }

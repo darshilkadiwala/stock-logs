@@ -513,6 +513,7 @@ function SidebarMenuSubButton({
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',
+        isActive && 'bg-sidebar-accent text-sidebar-accent-foreground -ms-2.5 rounded-none rounded-e-md ps-4',
         className,
       )}
       {...props}

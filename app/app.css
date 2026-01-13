@@ -18,6 +18,8 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
+  --blur-2xs: calc(var(--blur-xs) / 2);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -160,5 +162,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-backdrop-frosted {
+    @apply backdrop-blur-2xs dark:bg-primary/5 bg-primary/40;
   }
 }

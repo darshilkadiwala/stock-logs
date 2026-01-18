@@ -108,3 +108,50 @@ export interface Option<V = string> extends LabelValueOption<V> {
    */
   trailing?: ReactElement | string;
 }
+
+/* ================================= DIALOG TYPES ================================= */
+
+/**
+ * Dialog configuration types
+ */
+export type DialogId = string;
+
+export interface DialogOptions {
+  /**
+   * Whether the dialog can be closed by clicking outside or pressing ESC
+   * @default true
+   */
+  dismissible?: boolean;
+  /**
+   * Whether to show the close button
+   * @default true
+   */
+  showCloseButton?: boolean;
+  /**
+   * Custom className for the dialog content
+   */
+  className?: string;
+  /**
+   * Callback when dialog is closed
+   */
+  onClose?: () => void;
+  /**
+   * Callback when dialog is opened
+   */
+  onOpen?: () => void;
+}
+
+export interface DialogProps {
+  id: DialogId;
+  isOpen: boolean;
+  onClose: () => void;
+  data?: any;
+}
+
+export type DialogComponent = (props: DialogProps) => ReactNode;
+
+/**
+ * Dialog registry type
+ * Maps dialog IDs to component functions that receive DialogProps
+ */
+export type DialogRegistry = Record<DialogId, DialogComponent>;

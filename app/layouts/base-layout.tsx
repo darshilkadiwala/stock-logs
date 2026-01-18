@@ -1,20 +1,26 @@
+import { DialogManager } from '@/components/dialogs';
 import { SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/layouts/app-sidebar';
 import { SiteHeader } from '@/layouts/site-header';
+import { getDialogRegistry } from '@/lib/dialog-registry';
 import { navigationItems } from '@/lib/navigation';
+import { DialogProvider } from '@/providers/dialog-provider';
 import { NavigationProvider } from '@/providers/navigation-provider';
 import { SidebarProvider } from '@/providers/sidebar-provider';
 
 export function BaseLayout({ children }: { children: React.ReactNode }) {
   return (
-    <NavigationProvider items={navigationItems}>
-      <SidebarProvider style={{ '--header-height': 'calc(var(--spacing) * 12)' } as React.CSSProperties}>
-        <AppSidebar />
-        <SidebarInset>
-          <SiteHeader />
-          <main className='flex grow flex-col px-5 pt-2 pb-6 md:px-6 md:pt-4 lg:px-8 lg:pb-8'>{children}</main>
-        </SidebarInset>
-      </SidebarProvider>
-    </NavigationProvider>
+    <DialogProvider>
+      <NavigationProvider items={navigationItems}>
+        <SidebarProvider style={{ '--header-height': 'calc(var(--spacing) * 12)' } as React.CSSProperties}>
+          <AppSidebar />
+          <SidebarInset>
+            <SiteHeader />
+            <main className='flex grow flex-col px-5 pt-2 pb-6 md:px-6 md:pt-4 lg:px-8 lg:pb-8'>{children}</main>
+          </SidebarInset>
+        </SidebarProvider>
+      </NavigationProvider>
+      <DialogManager dialogs={getDialogRegistry()} />
+    </DialogProvider>
   );
 }

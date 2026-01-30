@@ -30,7 +30,7 @@ function SelectTrigger({ className, children, hasValue, allowClear, loading, onC
     <SelectPrimitive.Trigger
       data-slot='select-trigger'
       className={cn(
-        "border-input data-placeholder:text-muted-foreground ring-offset-background [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring aria-invalid:ring-destructive aria-invalid:text-destructive-foreground aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex h-auto w-fit cursor-pointer items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:inline-flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-50 hover:[&_svg]:opacity-100 [&_svg:not([class*='size-'])]:size-4",
+        "border-input data-placeholder:text-muted-foreground ring-offset-background [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring aria-invalid:ring-destructive aria-invalid:text-destructive-foreground aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex h-auto w-fit cursor-pointer items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:inline-flex *:data-[slot=select-value]:flex-auto *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-50 hover:[&_svg]:opacity-100 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}>
@@ -40,7 +40,13 @@ function SelectTrigger({ className, children, hasValue, allowClear, loading, onC
           <XIcon onPointerDown={onClear} />
         </SelectPrimitive.Icon>
       ) : null}
-      <Separator orientation='vertical' className='flex h-full min-h-6' data-slot='select-trigger-icon-separator' />
+      <Separator
+        orientation='vertical'
+        className='flex h-full min-h-6'
+        data-slot='select-trigger-icon-separator'
+        asChild>
+        <span />
+      </Separator>
       <SelectPrimitive.Icon asChild data-slot='select-trigger-icon'>
         {loading ? <Loader2Icon className='animate-spin' /> : <ChevronDownIcon />}
       </SelectPrimitive.Icon>

@@ -78,7 +78,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip={'Add Trade'}
-                  className='bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground justify-start'
+                  className='bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90 hover:text-sidebar-primary-foreground active:bg-sidebar-primary/90 active:text-sidebar-primary-foreground justify-start'
                   asChild>
                   <Link to={{ search: '?dialog=add-trade' }}>
                     <PlusCircleIcon className='size-5' />

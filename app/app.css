@@ -10,6 +10,12 @@
 }
 
 @theme inline {
+  --breakpoint-xs: 20rem; /* 320px */
+  --breakpoint-3xl: 120rem; /* 1920px */
+
+  --text-2xs: 0.625rem; /* 10px */
+  --text-2xs--line-height: 0.75rem; /* 12px (keeps it readable) */
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

@@ -25,7 +25,7 @@ export type ChargeCategory =
 export interface Charge {
   __type: string;
   id: string;
-  name: string;
+  name: ChargeCategory;
   chargeType: ChargeType;
   tradeType: TradeType;
   appliesOn: [ApplyOn, ...ApplyOn[]];
@@ -52,7 +52,7 @@ export interface ExchangeSpecificCharge extends Charge {
   value: Record<Exchange, number>;
 }
 
-export type ChargeConfig = Charge | NormalCharge | ExchangeSpecificCharge;
+export type ChargeConfig = NormalCharge | ExchangeSpecificCharge;
 
 /**
  * Configuration for a broker

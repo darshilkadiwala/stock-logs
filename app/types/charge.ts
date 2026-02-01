@@ -4,8 +4,8 @@ import type { TradeType } from './trade';
  * Broker charge configuration types
  */
 export type ChargeType = 'FIXED' | 'PERCENTAGE' | 'PERCENTAGE_WITH_MIN_MAX';
-export type ApplyOn = 'BUY' | 'SELL' | 'BOTH';
-export type Exchange = 'NSE' | 'BSE' | 'BOTH';
+export type ApplyOn = 'BUY' | 'SELL';
+export type Exchange = 'NSE' | 'BSE';
 export type Rounding = 'AUTO' | 'FLOOR' | 'CEIL' | 'NEAREST_HALF';
 export type ChargeCategory =
   | 'EQ_BROKERAGE'
@@ -14,30 +14,45 @@ export type ChargeCategory =
   | 'EX_TRANSACTION_CHARGES'
   | 'SEBI_TURNOVER_CHARGES'
   | 'DP_CHARGES'
-  | 'IPFT_CHARGE'
-  | 'GST'
-  | 'AUTO_SQUARE_OFF_CHARGES'
-  | 'PLEDGE_CHARGES';
+  | 'IPFT_CHARGE';
+// | 'GST'
+// | 'AUTO_SQUARE_OFF_CHARGES'
+// | 'PLEDGE_CHARGES';
 
 /**
  * Configuration for a single charge
  */
-export interface ChargeConfig {
+export interface Charge {
+  __type: string;
   id: string;
   name: string;
   chargeType: ChargeType;
   tradeType: TradeType;
-  value: number; // amount or percentage
-  min?: number; // Minimum charge (amount or percentage)
-  max?: number; // Maximum charge (amount or percentage)
-  applyOn: ApplyOn;
-  exchange: Exchange;
+  appliesOn: [ApplyOn, ...ApplyOn[]];
+  value: unknown;
   rounding: Rounding; // How to round decimal places of the charge value
   hint?: string; // hint to the user about the charge
 
   /** internal fields */
-  sortOrder?: number; // sorting order of the charge - lower the number, higher the priority, defaults to 0
+  sortOrder?: number;
 }
+
+export interface NormalCharge extends Charge {
+  __type: 'NORMAL';
+
+  value: number; // amount or percentage
+  min?: number; // Minimum charge (amount or percentage)
+  max?: number; // Maximum charge (amount or percentage)
+  exchanges: [Exchange, ...Exchange[]];
+}
+
+export interface ExchangeSpecificCharge extends Charge {
+  __type: 'EXCHANGE_SPECIFIC';
+
+  value: Record<Exchange, number>;
+}
+
+export type ChargeConfig = Charge | NormalCharge | ExchangeSpecificCharge;
 
 /**
  * Configuration for a broker
@@ -48,7 +63,7 @@ export interface Broker {
   enabled: boolean;
   isDefault: boolean;
   charges: ChargeConfig[]; // Key is charge category name
-  customCharges: ChargeConfig[];
+  gstOnCharges: number;
 }
 
 /**

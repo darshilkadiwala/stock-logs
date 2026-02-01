@@ -1,32 +1,56 @@
-import { CHARGE_TYPES, COMMON_CHARGE_CATEGORIES } from '@/constants/charges';
+import { APPLY_ON, CHARGE_DEFINITIONS, CHARGE_ROUNDING_TYPES, CHARGE_TYPES, EXCHANGES } from '@/constants/charges';
 import { TRADE_TYPES } from '@/constants/trades';
 import { generateId } from '@/lib/utils';
 
-import type { Broker, ChargeConfig } from '@/types/charge';
+import type {
+  Broker,
+  ChargeCategory,
+  ChargeConfig,
+  Exchange,
+  ExchangeSpecificCharge,
+  NormalCharge,
+} from '@/types/charge';
 
-// values of COMMON_CHARGE_CATEGORIES
-type CommonChargeCategory = (typeof COMMON_CHARGE_CATEGORIES)[keyof typeof COMMON_CHARGE_CATEGORIES];
+const ALL_EXCHANGES: [Exchange, ...Exchange[]] = [EXCHANGES.NSE, EXCHANGES.BSE];
+const ALL_APPLY_ON: ChargeConfig['appliesOn'] = [APPLY_ON.BUY.key, APPLY_ON.SELL.key];
 
-/**
- * Creates a default charge configuration
- */
-function createDefaultCharge<T extends ChargeConfig['tradeType']>(
-  name: CommonChargeCategory,
-  chargeType: ChargeConfig['chargeType'],
+function createNormalCharge<T extends ChargeConfig['tradeType']>(
   tradeType: T,
+  name: ChargeCategory,
   value: number,
-  options?: Omit<Partial<ChargeConfig>, 'id' | 'name' | 'chargeType' | 'tradeType' | 'value'>,
-): ChargeConfig & { tradeType: T } {
+  options?: Omit<Partial<NormalCharge>, 'id' | 'name' | 'tradeType' | 'value' | '__type'>,
+): NormalCharge & { tradeType: T } {
   return {
+    __type: 'NORMAL',
     id: generateId(),
     name,
-    chargeType,
     tradeType,
     value,
     ...options,
-    applyOn: options?.applyOn || 'BOTH',
-    exchange: options?.exchange || 'BOTH',
-    rounding: options?.rounding || 'AUTO',
+    exchanges: options?.exchanges || ALL_EXCHANGES,
+    chargeType: options?.chargeType || CHARGE_TYPES.PERCENTAGE.key,
+    appliesOn: options?.appliesOn || ALL_APPLY_ON,
+    rounding: options?.rounding || CHARGE_ROUNDING_TYPES.AUTO,
+    sortOrder: options?.sortOrder || 0,
+  };
+}
+
+function createExchangeSpecificCharge<T extends ChargeConfig['tradeType']>(
+  tradeType: T,
+  name: ChargeCategory,
+  value: ExchangeSpecificCharge['value'], // This is Record<Exchange, number>
+  options?: Omit<Partial<ExchangeSpecificCharge>, 'id' | 'name' | 'tradeType' | 'value' | '__type'>,
+): ExchangeSpecificCharge & { tradeType: T } {
+  return {
+    __type: 'EXCHANGE_SPECIFIC',
+    id: generateId(),
+    name,
+    tradeType,
+    value,
+    ...options,
+    chargeType: options?.chargeType || CHARGE_TYPES.PERCENTAGE.key,
+    appliesOn: options?.appliesOn || ALL_APPLY_ON,
+    rounding: options?.rounding || CHARGE_ROUNDING_TYPES.AUTO,
     sortOrder: options?.sortOrder || 0,
   };
 }
@@ -38,164 +62,65 @@ export function createBroker({
   name,
   isDefault = false,
   enabled = true,
+  gstOnCharges = 18,
 }: {
   name: string;
   isDefault?: boolean;
   enabled?: boolean;
+  gstOnCharges?: number;
 }): Broker {
-  type ChargeDescriptor = {
-    name: CommonChargeCategory;
-    chargeType: ChargeConfig['chargeType'];
-    value: number;
-    options?: Omit<Partial<ChargeConfig>, 'id' | 'name' | 'chargeType' | 'tradeType' | 'value'>;
-  };
+  const intradayCharges: (ChargeConfig & { tradeType: typeof TRADE_TYPES.INTRADAY })[] = [
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.EQ_BROKERAGE.key, 0.1, {
+      max: 20,
+      min: 5,
+      chargeType: CHARGE_TYPES.PERCENTAGE_WITH_MIN_MAX.key,
+    }),
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.STT.key, 0.025, { appliesOn: [APPLY_ON.SELL.key] }),
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.STAMP.key, 0.003, { appliesOn: [APPLY_ON.BUY.key] }),
+    createExchangeSpecificCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.EX_TRANSACTION_CHARGES.key, {
+      NSE: 0.00297,
+      BSE: 0.00375,
+    }),
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.SEBI_TURNOVER_CHARGES.key, 0.0001),
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.DP_CHARGES.key, 0, {
+      chargeType: CHARGE_TYPES.FIXED.key,
+      hint: 'Per scrip (plus tax) on sell side, update according to your broker & you gender',
+    }),
+    createNormalCharge(TRADE_TYPES.INTRADAY, CHARGE_DEFINITIONS.IPFT_CHARGE.key, 0.0001, {
+      exchanges: [EXCHANGES.NSE],
+    }),
+  ];
 
-  function buildChargeRecord<
-    T extends ChargeConfig['tradeType'],
-    R extends Record<CommonChargeCategory, ChargeDescriptor>,
-  >(tradeType: T, descriptors: R): { [K in keyof R]: ChargeConfig & { tradeType: T } } {
-    return (Object.keys(descriptors) as CommonChargeCategory[]).reduce(
-      (acc, name) => {
-        const d = descriptors[name];
-        acc[name as keyof R] = createDefaultCharge(d.name, d.chargeType, tradeType, d.value, d.options) as any;
-        return acc;
-      },
-      {} as { [K in keyof R]: ChargeConfig & { tradeType: T } },
-    );
-  }
+  const deliveryCharges: (ChargeConfig & { tradeType: typeof TRADE_TYPES.DELIVERY })[] = [
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.EQ_BROKERAGE.key, 0.1, {
+      max: 20,
+      min: 5,
+      chargeType: CHARGE_TYPES.PERCENTAGE_WITH_MIN_MAX.key,
+    }),
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.STT.key, 0.1),
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.STAMP.key, 0.015, { appliesOn: [APPLY_ON.BUY.key] }),
+    createExchangeSpecificCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.EX_TRANSACTION_CHARGES.key, {
+      NSE: 0.00297,
+      BSE: 0.00375,
+    }),
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.SEBI_TURNOVER_CHARGES.key, 0.0001),
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.DP_CHARGES.key, 20, {
+      chargeType: CHARGE_TYPES.FIXED.key,
+      hint: 'Per scrip (plus tax) on sell side, update according to your broker & you gender',
+      appliesOn: [APPLY_ON.SELL.key],
+    }),
+    createNormalCharge(TRADE_TYPES.DELIVERY, CHARGE_DEFINITIONS.IPFT_CHARGE.key, 0.0001, {
+      exchanges: [EXCHANGES.NSE],
+    }),
+  ];
 
-  const INTRADAY_DESCRIPTORS: Record<CommonChargeCategory, ChargeDescriptor> = {
-    [COMMON_CHARGE_CATEGORIES.EQ_BROKERAGE]: {
-      name: COMMON_CHARGE_CATEGORIES.EQ_BROKERAGE,
-      chargeType: CHARGE_TYPES.PERCENTAGE_WITH_MIN_MAX,
-      value: 0.1,
-      options: { min: 5, max: 20 },
-    },
-    [COMMON_CHARGE_CATEGORIES.STT]: {
-      name: COMMON_CHARGE_CATEGORIES.STT,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.025,
-      options: { applyOn: 'SELL' },
-    },
-    [COMMON_CHARGE_CATEGORIES.STAMP]: {
-      name: COMMON_CHARGE_CATEGORIES.STAMP,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.003,
-      options: { applyOn: 'BUY' },
-    },
-    [COMMON_CHARGE_CATEGORIES.EX_TRANSACTION_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.EX_TRANSACTION_CHARGES,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.00297,
-    },
-    [COMMON_CHARGE_CATEGORIES.SEBI_TURNOVER_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.SEBI_TURNOVER_CHARGES,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.0001,
-    },
-    [COMMON_CHARGE_CATEGORIES.DP_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.DP_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 0,
-    },
-    [COMMON_CHARGE_CATEGORIES.IPFT_CHARGE]: {
-      name: COMMON_CHARGE_CATEGORIES.IPFT_CHARGE,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.0001,
-      options: { applyOn: 'BOTH', exchange: 'NSE' },
-    },
-    [COMMON_CHARGE_CATEGORIES.AUTO_SQUARE_OFF_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.AUTO_SQUARE_OFF_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 50,
-      options: { applyOn: 'BOTH' },
-    },
-    [COMMON_CHARGE_CATEGORIES.PLEDGE_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.PLEDGE_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 20,
-      options: { applyOn: 'BOTH' },
-    },
-    [COMMON_CHARGE_CATEGORIES.GST]: {
-      name: COMMON_CHARGE_CATEGORIES.GST,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 18,
-      options: { applyOn: 'BOTH' },
-    },
-  };
-
-  const DELIVERY_DESCRIPTORS: Record<CommonChargeCategory, ChargeDescriptor> = {
-    [COMMON_CHARGE_CATEGORIES.EQ_BROKERAGE]: {
-      name: COMMON_CHARGE_CATEGORIES.EQ_BROKERAGE,
-      chargeType: CHARGE_TYPES.PERCENTAGE_WITH_MIN_MAX,
-      value: 0.1,
-      options: { min: 5, max: 20 },
-    },
-    [COMMON_CHARGE_CATEGORIES.STT]: {
-      name: COMMON_CHARGE_CATEGORIES.STT,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.1,
-      options: { applyOn: 'SELL' },
-    },
-    [COMMON_CHARGE_CATEGORIES.STAMP]: {
-      name: COMMON_CHARGE_CATEGORIES.STAMP,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.015,
-      options: { applyOn: 'BUY' },
-    },
-    [COMMON_CHARGE_CATEGORIES.EX_TRANSACTION_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.EX_TRANSACTION_CHARGES,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.00297,
-    },
-    [COMMON_CHARGE_CATEGORIES.SEBI_TURNOVER_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.SEBI_TURNOVER_CHARGES,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.0001,
-    },
-    [COMMON_CHARGE_CATEGORIES.DP_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.DP_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 20,
-      options: { applyOn: 'SELL' },
-    },
-    [COMMON_CHARGE_CATEGORIES.IPFT_CHARGE]: {
-      name: COMMON_CHARGE_CATEGORIES.IPFT_CHARGE,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 0.0001,
-      options: { applyOn: 'BOTH', exchange: 'NSE' },
-    },
-    [COMMON_CHARGE_CATEGORIES.AUTO_SQUARE_OFF_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.AUTO_SQUARE_OFF_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 0,
-      options: { applyOn: 'BOTH' },
-    },
-    [COMMON_CHARGE_CATEGORIES.PLEDGE_CHARGES]: {
-      name: COMMON_CHARGE_CATEGORIES.PLEDGE_CHARGES,
-      chargeType: CHARGE_TYPES.FIXED,
-      value: 20,
-      options: { applyOn: 'BOTH' },
-    },
-    [COMMON_CHARGE_CATEGORIES.GST]: {
-      name: COMMON_CHARGE_CATEGORIES.GST,
-      chargeType: CHARGE_TYPES.PERCENTAGE,
-      value: 18,
-      options: { applyOn: 'BOTH' },
-    },
-  };
-
-  const intradayCharges = buildChargeRecord(TRADE_TYPES.INTRADAY, INTRADAY_DESCRIPTORS);
-  const deliveryCharges = buildChargeRecord(TRADE_TYPES.DELIVERY, DELIVERY_DESCRIPTORS);
-
-  const allCharges = [...Object.values(intradayCharges), ...Object.values(deliveryCharges)];
   return {
     id: generateId(),
     name,
     enabled,
     isDefault,
-    charges: allCharges,
-    customCharges: [],
+    charges: [...intradayCharges, ...deliveryCharges],
+    gstOnCharges,
   };
 }
 

@@ -1,5 +1,6 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import { TailwindIndicator } from '@/components/common/tailwind-indicator';
 import { BaseLayout } from '@/layouts/base-layout';
 import { ThemeProvider } from '@/providers/theme-provider';
 
@@ -32,6 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider>
           <BaseLayout>{children}</BaseLayout>
+          <TailwindIndicator />
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />

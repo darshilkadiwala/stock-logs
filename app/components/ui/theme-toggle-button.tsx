@@ -11,7 +11,7 @@ export function ThemeToggle({ className, ...props }: ButtonProps) {
     setTheme(theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
   };
 
-  const Icon = theme === Themes.DARK ? Sun : Moon;
+  const Icon = theme === Themes.DARK ? Moon : Sun;
 
   return (
     <Button

@@ -72,6 +72,28 @@
   --tw-shadow-color: var(--shadow-color);
   --tw-text-shadow-color: var(--text-shadow-color);
   --tw-inset-shadow-color: var(--inset-shadow-color);
+
+  /* M3 (Material 3 Expressive Breathing: Expands/Contracts the dasharray */
+  --animate-m3-wavy-expand: m3-wavy-expand 3s ease-in-out infinite;
+
+  /* 
+    Adjusted for Wavy Path Length (~133px vs Standard ~125px)
+    Values: [dash_length, gap_length]
+  */
+  @keyframes m3-wavy-expand {
+    0% {
+      stroke-dasharray: 1, 300;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 100, 300; /* ~75% of wavy circumference */
+      stroke-dashoffset: -30;
+    }
+    100% {
+      stroke-dasharray: 100, 300;
+      stroke-dashoffset: -130; /* Full loop overlap */
+    }
+  }
 }
 
 :root {
@@ -182,5 +204,13 @@
 @layer utilities {
   .bg-backdrop-frosted {
     @apply backdrop-blur-2xs dark:bg-primary/5 bg-primary/40;
+  }
+
+  .stroke-linejoin-round {
+    stroke-linejoin: round;
+  }
+
+  .stroke-cap-round {
+    stroke-linecap: round;
   }
 }

@@ -1,4 +1,5 @@
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import { useEffect, useState, type ReactNode } from 'react';
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from 'react-router';
 
 import { TailwindIndicator } from '@/components/common/tailwind-indicator';
 import { BaseLayout } from '@/layouts/base-layout';
@@ -7,6 +8,8 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import type { Route } from './+types/root';
 
 import './app.css';
+
+import { LoadingWithLogo } from './components/common/loading-with-logo';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -21,7 +24,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang='en'>
       <head>
@@ -43,7 +46,38 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const navigation = useNavigation();
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (navigation.state === 'loading') {
+      // Wait 250ms before showing the loader to prevent flickering
+      timeout = setTimeout(() => {
+        setShowLoader(() => true);
+      }, 250);
+    } else {
+      setShowLoader(() => false);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [navigation.state]);
+
+  // If we are navigating AND the timeout has passed, show the loader
+  if (navigation.state === 'loading' && showLoader) {
+    return (
+      <div className='animate-in fade-in flex grow items-center justify-center duration-500'>
+        <LoadingWithLogo />
+      </div>
+    );
+  }
+
   return <Outlet />;
+}
+
+export function HydrateFallback() {
+  return <LoadingWithLogo />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

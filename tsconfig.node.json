@@ -6,5 +6,11 @@
     "composite": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "react-router.config.ts", "prettier.config.js"]
+  "include": [
+    "vite.config.ts",
+    "react-router.config.ts",
+    "prettier.config.js",
+    "vite.main.config.ts",
+    "vite.preload.config.ts"
+  ]
 }

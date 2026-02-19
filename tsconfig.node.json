@@ -11,6 +11,7 @@
     "react-router.config.ts",
     "prettier.config.js",
     "vite.main.config.ts",
-    "vite.preload.config.ts"
+    "vite.preload.config.ts",
+    "vite.renderer.config.ts"
   ]
 }

@@ -5,11 +5,11 @@ export default defineConfig({
     lib: {
       entry: 'electron/main.ts',
       formats: ['cjs'],
-      fileName: () => 'main.js',
+      fileName: () => 'main.cjs',
     },
     rollupOptions: {
       external: ['electron', 'path', 'fs'], // Core Node/Electron modules
     },
-    outDir: '.vite/build',
+    outDir: 'dist/build',
   },
 });

@@ -2,6 +2,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { app, BrowserWindow, ipcMain } from 'electron';
+import squirrelStartup from 'electron-squirrel-startup';
+
+if (squirrelStartup) {
+  app.quit();
+}
 
 // This allows TypeScript to pick up the magic constants exposed by the Forge Vite plugin
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -18,7 +23,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
     },
@@ -35,11 +40,13 @@ function createWindow() {
   // Forge Vite Plugin logic:
   // In development, load the Vite dev server URL (HMR works here!)
   // In production, load the static index.html from the build folder
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  if (isDev) {
+    mainWindow.loadURL(devUrl);
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    // mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    // React Router builds to build/client/index.html in SPA mode
+    mainWindow.loadFile(path.join(__dirname, '../../build/client/index.html'));
   }
 }
 

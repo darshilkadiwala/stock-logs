@@ -1,9 +1,8 @@
-import path from 'path';
-
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
+import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import type { ForgeConfig } from '@electron-forge/shared-types';
@@ -12,10 +11,12 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 export default {
   packagerConfig: {
     asar: true,
+    // extraResource: ['dist/main_window/client'],
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
   plugins: [
+    new AutoUnpackNativesPlugin({}),
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
       // If you are familiar with Vite configuration, it will look really familiar.
@@ -23,7 +24,7 @@ export default {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: 'electron/main.ts',
-          config: path.join(__dirname, 'vite.main.config.ts'),
+          config: 'vite.main.config.ts',
           target: 'main',
         },
         {
@@ -33,10 +34,10 @@ export default {
         },
       ],
       renderer: [
-        {
-          name: 'main_window',
-          config: path.join(__dirname, 'vite.config.ts'),
-        },
+        // {
+        //   name: 'main_window',
+        //   config: 'vite.renderer.config.ts',
+        // },
       ],
     }),
     // Fuses are used to enable/disable various Electron functionality

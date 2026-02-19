@@ -5,10 +5,12 @@ export default defineConfig({
     lib: {
       entry: 'electron/preload.ts',
       formats: ['cjs'],
+      fileName: () => '[name].cjs',
     },
     rollupOptions: {
       external: ['electron', 'path', 'fs'], // Don't bundle electron itself
+      output: { entryFileNames: '[name].cjs' },
     },
-    outDir: '.vite/build',
+    outDir: 'dist/build',
   },
 });

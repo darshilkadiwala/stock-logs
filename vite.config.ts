@@ -7,6 +7,13 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // For Electron, vite.renderer.config.ts is used instead
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+  build: {
+    // This ensures RR v7 outputs to the location Forge expects
+    // outDir: '.vite/renderer/main_window',
+    // outDir: 'dist/main_window',
+  },
+
+  // base: './',
   // Remove build.outDir - this conflicts with Electron Forge
   // If you need to run as a web app, uncomment:
   // build: { outDir: 'dist/web' },

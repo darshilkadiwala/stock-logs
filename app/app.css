@@ -214,3 +214,7 @@
     stroke-linecap: round;
   }
 }
+
+html {
+  scrollbar-gutter: stable;
+}

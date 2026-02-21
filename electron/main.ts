@@ -1,22 +1,25 @@
+import 'dotenv/config'; // Load .env
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { app, BrowserWindow, ipcMain } from 'electron';
 import squirrelStartup from 'electron-squirrel-startup';
 
+// Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (squirrelStartup) {
   app.quit();
 }
-
-// This allows TypeScript to pick up the magic constants exposed by the Forge Vite plugin
-declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
-declare const MAIN_WINDOW_VITE_NAME: string;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const isDev = process.env.NODE_ENV === 'development';
-const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
+const devUrl = process.env.VITE_DEV_SERVER_URL;
+
+if (isDev && !devUrl) {
+  throw new Error('VITE_DEV_SERVER_URL is not defined');
+}
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -26,8 +29,9 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
+      // webSecurity: isDev ? false : true, // Disable for dev to allow loading from localhost
     },
-    icon: path.join(__dirname, '../public/favicon.png'),
+    // icon: path.join(__dirname, '../../public/favicon.png'),
   });
 
   // if (isDev) {
@@ -40,13 +44,19 @@ function createWindow() {
   // Forge Vite Plugin logic:
   // In development, load the Vite dev server URL (HMR works here!)
   // In production, load the static index.html from the build folder
-  if (isDev) {
+  if (isDev && devUrl) {
+    // Development: Load React Router dev server
+    // Make sure to run `pnpm dev` first!
     mainWindow.loadURL(devUrl);
     mainWindow.webContents.openDevTools();
   } else {
     // mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
     // React Router builds to build/client/index.html in SPA mode
-    mainWindow.loadFile(path.join(__dirname, '../../build/client/index.html'));
+    mainWindow.loadFile(path.join(__dirname, '../renderer/main_window/client/index.html'));
+
+    // Production: Load from built files
+    // We expect the 'client' folder to be copied to resources via extraResource
+    // mainWindow.loadFile(path.join(process.resourcesPath, 'client/index.html'));
   }
 }
 

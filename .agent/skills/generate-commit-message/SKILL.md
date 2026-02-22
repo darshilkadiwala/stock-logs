@@ -1,6 +1,13 @@
+---
+name: Generate Commit Message
+description: >
+  A comprehensive guide and set of conventions for generating git commit messages. 
+  Use this skill whenever asked to write or generate a commit message for git diffs or staged changes.
+---
+
 # Commit message conventions
 
-A comprehensive overview of the common commit message conventions across different categories. Feel free to adapt or modify them to fit project’s specific needs and style. You will be given a git diff code changes and asked to write a commit message, if no git diff given then pick the staged changes and write a commit message for it.
+A comprehensive overview of the common commit message conventions across different categories. When you are given git diff code changes and asked to write a commit message, or if no git diff is given but there are staged changes, ALWAYS follow these instructions to write the commit message.
 
 ## Instruction
 
@@ -52,7 +59,7 @@ If a bullet-style description is used:
 - Use bullet points like:
 
   ```plaintext
-    - Add ability to filter results by category
-    - Remove deprecated `xyzService` from module loader
-    - Fix crash when submitting empty form
+  - Add ability to filter results by category
+  - Remove deprecated `xyzService` from module loader
+  - Fix crash when submitting empty form
   ```

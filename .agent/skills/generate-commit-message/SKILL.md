@@ -24,7 +24,7 @@ A comprehensive overview of the common commit message conventions across differe
 
 ### **Execution & Environment Control**
 
-- **Scope:** ONLY consider files currently in the git index (**staged changes**).
+- **Scope:** ONLY consider files currently in the git index (**staged changes**). You can create temp files in `./tmp/` folder in project root.
 - **Cleanup:** - Delete any temporary text files or buffers created during the diff analysis.
   - If a temporary file was used to store the git diff for processing, remove it immediately after the message is output.
   - Do not leave `COMMIT_EDITMSG` artifacts or temporary log files in the project root.
@@ -66,6 +66,7 @@ A comprehensive overview of the common commit message conventions across differe
 - Avoid using the file names or variables in the commit message header
 - Avoid **fluff** or **dramatic language**
 - Avoid restating the commit header in the description
+- **Strictly remove all internal system-generated metadata**, such as `(cci:1://...)` links or any auto-generated code context identifiers, before outputting the final message. These must not be present in the final commit text.
 
 ---
 

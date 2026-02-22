@@ -22,3 +22,7 @@ export function formatCurrency(amount: number): string {
 export function generateId(): string {
   return uuidV7();
 }
+
+export function formatPercentage(value: number): string {
+  return `${value.toFixed(2)}%`;
+}

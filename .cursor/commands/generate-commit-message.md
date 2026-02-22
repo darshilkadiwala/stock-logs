@@ -24,13 +24,13 @@ A comprehensive overview of the common commit message conventions across differe
   - Good: Add filtering to reports
   - Bad: Added filtering to reports
 - Avoid repetition in messages
-- Use a **personal tone** when helpful (e.g., "You can now\...")
+- Do NOT output any introductory paragraphs or summary text before the bullet points.
+- Only output the commit header and the bulleted list.
 - Keep the tone informative but concise — no fluff or dramatic language
-- Focus on **what changed** from the **user's perspective**
-  - Prefer “You can now…” or “X no longer does Y when Z.”
+- If the commit is complex, provide a strict, objective 1-2 sentence summary explaining the technical reason (the "Why") for the change before listing the bullet points.
 - Describe known issues or limitations if any
-- Use backticks (`) for filenames, code, or API references when needed
-- Commit header format will be like: 'feat(module): implement a new feature under this module'
+- Use backticks (\`) for filenames, code, or API references when needed
+- Commit header format will be like: `feat(module): implement a new feature under this module`
 - Always use markdown format for commit message so i can do copy-paste
 
 ---

@@ -34,7 +34,7 @@ export function BrokerChargesTable({ charges }: BrokerChargesTableProps) {
 
   return (
     <div className='rounded-md border'>
-      <Table className='**:'>
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead className='border-e md:w-1/3'></TableHead>

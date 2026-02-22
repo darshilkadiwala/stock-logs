@@ -12,11 +12,16 @@ const badgeVariants = cva(
         outline: 'border-border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
         ghost: '[a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
         link: 'text-muted-foreground/50 hover:text-primary/80 cursor-pointer border-none px-0.5 underline underline-offset-4',
+
+        profit: 'bg-profit/10 text-profit',
+        loss: 'bg-loss/10 text-loss',
+        info: 'bg-info/10 text-info',
+        warning: 'bg-warning/10 text-warning',
       },
       size: {
-        sm: 'text-2xs px-2 py-0.5 [&>svg]:size-2.5',
-        md: 'px-2.5 py-0.5 text-xs [&>svg]:size-3',
-        lg: 'px-3 py-1 text-sm [&>svg]:size-3.5',
+        sm: `text-2xs px-2 py-0.5 [&>svg:not([class*='size-'])]:size-2.5`,
+        md: `px-2.5 py-0.5 text-xs [&>svg:not([class*='size-'])]:size-3`,
+        lg: `px-3 py-1 text-sm [&>svg:not([class*='size-'])]:size-3.5`,
       },
       shape: {
         pill: 'rounded-full',

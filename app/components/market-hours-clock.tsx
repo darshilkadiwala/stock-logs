@@ -105,7 +105,7 @@ export function MarketHoursClock() {
   // Second hand: 6 degrees per second
   const secondAngle = seconds * 6; // 0 degrees to start at 12 o'clock
 
-  const statusColor = time ? (marketStatus === 'open' ? 'bg-green-500' : 'bg-red-500') : 'bg-gray-400';
+  const statusColor = time ? (marketStatus === 'open' ? 'bg-profit' : 'bg-loss') : 'bg-chart-3';
   const statusText = time ? (marketStatus === 'open' ? 'Open' : 'Closed') : 'Loading...';
   const timeText = time ? formatTime(time) : '--:--:-- --';
   const dateText = time ? formatDate(time) : '--/--/----';

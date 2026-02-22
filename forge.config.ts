@@ -1,5 +1,3 @@
-import path from 'path';
-
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
@@ -23,7 +21,7 @@ export default {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: 'electron/main.ts',
-          config: path.join(__dirname, 'vite.main.config.ts'),
+          config: 'vite.main.config.ts',
           target: 'main',
         },
         {
@@ -33,10 +31,10 @@ export default {
         },
       ],
       renderer: [
-        {
-          name: 'main_window',
-          config: path.join(__dirname, 'vite.config.ts'),
-        },
+        // {
+        //   name: 'main_window',
+        //   config: 'vite.renderer.config.ts',
+        // },
       ],
     }),
     // Fuses are used to enable/disable various Electron functionality

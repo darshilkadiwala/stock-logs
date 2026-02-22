@@ -6,12 +6,13 @@ import { PanelLeftIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input/input';
+import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/tw-utils';
-import { SidebarProvider, useSidebar } from '@/providers/sidebar-provider';
+import { SIDEBAR_KEYBOARD_SHORTCUT, SidebarProvider, useSidebar } from '@/providers/sidebar-provider';
 
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 
@@ -110,23 +111,54 @@ function Sidebar({
 }
 
 function SidebarTrigger({ className, onClick, ...props }: ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, isMobile } = useSidebar();
+
+  if (isMobile) {
+    return (
+      <Button
+        data-sidebar='trigger'
+        data-slot='sidebar-trigger'
+        variant='ghost'
+        size='icon'
+        className={cn('size-7', className)}
+        onClick={(event) => {
+          onClick?.(event);
+          toggleSidebar();
+        }}
+        {...props}>
+        <PanelLeftIcon />
+        <span className='sr-only'>Toggle Sidebar</span>
+      </Button>
+    );
+  }
 
   return (
-    <Button
-      data-sidebar='trigger'
-      data-slot='sidebar-trigger'
-      variant='ghost'
-      size='icon'
-      className={cn('size-7', className)}
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
-      {...props}>
-      <PanelLeftIcon />
-      <span className='sr-only'>Toggle Sidebar</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          data-sidebar='trigger'
+          data-slot='sidebar-trigger'
+          variant='ghost'
+          size='icon'
+          className={cn('size-7', className)}
+          onClick={(event) => {
+            onClick?.(event);
+            toggleSidebar();
+          }}
+          {...props}>
+          <PanelLeftIcon />
+          <span className='sr-only'>Toggle Sidebar</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side='bottom' variant='secondary' className='flex items-center gap-2'>
+        <span>Toggle Sidebar</span>
+        <KbdGroup>
+          <Kbd title='Command'>⌘</Kbd>
+          <span>+</span>
+          <Kbd title={SIDEBAR_KEYBOARD_SHORTCUT.toUpperCase()}>{SIDEBAR_KEYBOARD_SHORTCUT.toUpperCase()}</Kbd>
+        </KbdGroup>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -142,7 +174,7 @@ function SidebarRail({ className, ...props }: ComponentProps<'button'>) {
       onClick={toggleSidebar}
       title='Toggle Sidebar'
       className={cn(
-        'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex',
+        'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full',
@@ -161,7 +193,7 @@ function SidebarInset({ className, ...props }: ComponentProps<'main'>) {
       data-slot='sidebar-inset'
       className={cn(
         'bg-background relative flex w-full flex-1 flex-col',
-        'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
+        'min-w-0 md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
         className,
       )}
       {...props}

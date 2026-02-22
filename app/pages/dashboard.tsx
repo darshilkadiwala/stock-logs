@@ -1,4 +1,6 @@
-import { user } from '@/lib/user';
+import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header';
+import { SummaryCards } from '@/components/dashboard/summary-cards';
+import { Separator } from '@/components/ui/separator';
 
 import type { Route } from './+types/dashboard';
 
@@ -10,13 +12,12 @@ export function meta({}: Route.MetaArgs): Route.MetaDescriptors {
 }
 
 export default function Dashboard() {
-  const firstName = user.name.split(' ')[0];
-
   return (
-    <div className=''>
-      <h1 className='text-primary text-2xl tracking-tight'>
-        Welcome back, <span className='font-bold'>{firstName}!</span>
-      </h1>
-    </div>
+    <section className='animate-in fade-in slide-in-from-bottom-2 space-y-4 duration-500'>
+      <DashboardPageHeader />
+      <Separator />
+      {/* Summary Cards Grid */}
+      <SummaryCards />
+    </section>
   );
 }

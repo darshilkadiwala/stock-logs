@@ -6,5 +6,13 @@
 /.react-router/
 /build/
 /dist/
+/.vite/
+/out/
+/.tmp/
+/tmp/
+/.temp/
+/temp/
+
+
 
 ui-inspiration/

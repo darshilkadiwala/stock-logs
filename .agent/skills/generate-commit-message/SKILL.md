@@ -11,6 +11,24 @@ A comprehensive overview of the common commit message conventions across differe
 
 ## Instruction
 
+### **Files to consider for generating commit message**
+
+- You are given git diff code changes and asked to write a commit message.
+- You are given staged changes and asked to write a commit message.
+- You are given a commit message and asked to generate a commit message.
+
+### **Strict Constraints**
+
+- Only generate the commit message based on staged changes (files in the index) (git diff --cached)
+- Do not include details from unstaged/working directory changes or the entire file history unless they are explicitly marked as staged in the provided diff
+
+### **Execution & Environment Control**
+
+- **Scope:** ONLY consider files currently in the git index (**staged changes**).
+- **Cleanup:** - Delete any temporary text files or buffers created during the diff analysis.
+  - If a temporary file was used to store the git diff for processing, remove it immediately after the message is output.
+  - Do not leave `COMMIT_EDITMSG` artifacts or temporary log files in the project root.
+
 ### **Commit Message Format**
 
 **Prefix format:**

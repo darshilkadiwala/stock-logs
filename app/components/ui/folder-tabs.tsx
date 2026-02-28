@@ -7,7 +7,7 @@ import { cn } from '@/lib/tw-utils';
 
 function FolderTabs({ className, ...props }: ComponentProps<typeof Tabs>) {
   return (
-    <Card className='relative -mx-4 rounded-lg border-none bg-transparent p-0 shadow-none lg:-mx-2'>
+    <Card className='-mx-4 rounded-md border-none bg-transparent p-0 shadow-none ring-0 lg:-mx-2'>
       <Tabs data-slot='folder-tabs' className={cn('gap-0', className)} {...props} />
     </Card>
   );

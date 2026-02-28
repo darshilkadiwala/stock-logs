@@ -1,26 +1,25 @@
-import { Download, Filter, Search } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, DownloadIcon, FilterIcon, SearchIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PaginationFooter } from '@/components/ui/pagination-footer';
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { dashboardHoldings } from '@/lib/dummy-data';
 
 export function HoldingsTable() {
   return (
-    <Card className='flex flex-col gap-0 overflow-hidden py-0'>
-      <CardHeader className='flex flex-row items-center justify-between border-b px-5 py-4'>
+    <Card className='gap-0 overflow-hidden pb-0'>
+      <CardHeader className='border-b'>
         <CardTitle className='text-base font-semibold'>Holdings ({dashboardHoldings.length})</CardTitle>
-        <CardAction className='flex items-center gap-1'>
-          <Button variant='ghost' size='icon-sm' title='Search' className='text-muted-foreground'>
-            <Search className='size-4' />
+        <CardAction className='text-muted-foreground'>
+          <Button variant='ghost' size='icon-sm' title='Search'>
+            <SearchIcon className='size-4' />
           </Button>
-          <Button variant='ghost' size='icon-sm' title='Filter' className='text-muted-foreground'>
-            <Filter className='size-4' />
+          <Button variant='ghost' size='icon-sm' title='Filter'>
+            <FilterIcon className='size-4' />
           </Button>
-          <Button variant='ghost' size='icon-sm' title='Download CSV' className='text-muted-foreground'>
-            <Download className='size-4' />
+          <Button variant='ghost' size='icon-sm' title='Download CSV'>
+            <DownloadIcon className='size-4' />
           </Button>
         </CardAction>
       </CardHeader>
@@ -29,7 +28,7 @@ export function HoldingsTable() {
         <Table className='overflow-x-auto'>
           <TableHeader className='bg-muted/50'>
             <TableRow>
-              <TableHead className='w-[25%]'>Instrument</TableHead>
+              <TableHead>Instrument</TableHead>
               <TableHead className='text-right'>Qty.</TableHead>
               <TableHead className='text-right'>Avg. Price</TableHead>
               <TableHead className='text-right'>LTP</TableHead>
@@ -42,11 +41,9 @@ export function HoldingsTable() {
             {dashboardHoldings.map((h, i) => (
               <TableRow key={i} className='group cursor-pointer'>
                 <TableCell>
-                  <div className='flex flex-col'>
-                    <span className='text-foreground font-semibold'>{h.symbol}</span>
-                    <span className='text-muted-foreground group-hover:text-foreground text-xs transition-colors'>
-                      {h.name}
-                    </span>
+                  <div className='text-foreground font-semibold'>{h.symbol}</div>
+                  <div className='text-muted-foreground group-hover:text-foreground text-xs text-wrap transition-colors'>
+                    {h.name}
                   </div>
                 </TableCell>
                 <TableCell className='text-right tabular-nums'>{h.qty}</TableCell>
@@ -57,19 +54,30 @@ export function HoldingsTable() {
                   {h.pnl}
                 </TableCell>
                 <TableCell className='text-right'>
-                  <div className='flex h-full items-center justify-end'>
-                    <Badge shape='pill' variant={h.isProfit ? 'profit' : 'loss'}>
-                      {h.netChg}
-                    </Badge>
-                  </div>
+                  <Badge shape='pill' variant={h.isProfit ? 'profit' : 'loss'}>
+                    {h.netChg}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </CardContent>
-
-      <PaginationFooter showingText={`Showing ${dashboardHoldings.length} of ${dashboardHoldings.length} holdings`} />
+      <CardFooter className='justify-between sm:flex-row'>
+        <div>
+          Showing {dashboardHoldings.length} of {dashboardHoldings.length} holdings
+        </div>
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='sm' disabled>
+            <ChevronLeftIcon className='mr-1 size-3' />
+            Previous
+          </Button>
+          <Button variant='outline' size='sm'>
+            Next
+            <ChevronRightIcon className='ml-1 size-3' />
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

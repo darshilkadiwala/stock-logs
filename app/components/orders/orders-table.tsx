@@ -1,15 +1,15 @@
-import { Info } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, InfoIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { PaginationFooter } from '@/components/ui/pagination-footer';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ordersHistory } from '@/lib/dummy-data';
 
 export function OrdersTable() {
   return (
-    <Card className='flex flex-1 flex-col overflow-hidden py-0'>
+    <Card className='py-0'>
       <CardContent className='p-0'>
         <Table>
           <TableHeader className='bg-muted/50'>
@@ -49,7 +49,7 @@ export function OrdersTable() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Info className='text-muted-foreground hover:text-foreground size-4 cursor-help transition-colors' />
+                            <InfoIcon className='text-muted-foreground hover:text-foreground size-4 cursor-help transition-colors' />
                           </TooltipTrigger>
                           <TooltipContent side='right'>
                             <p>{o.info}</p>
@@ -64,8 +64,25 @@ export function OrdersTable() {
           </TableBody>
         </Table>
       </CardContent>
-
-      <PaginationFooter currentItems={ordersHistory.length} totalItems={ordersHistory.length} />
+      <CardFooter className='justify-between sm:flex-row'>
+        <div>
+          <span>
+            Showing <span className='text-foreground font-medium'>1</span> to{' '}
+            <span className='text-foreground font-medium'>{ordersHistory.length}</span> of{' '}
+            <span className='text-foreground font-medium'>{ordersHistory.length}</span> entries
+          </span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='sm' disabled>
+            <ChevronLeftIcon className='mr-1 size-3' />
+            Previous
+          </Button>
+          <Button variant='outline' size='sm'>
+            Next
+            <ChevronRightIcon className='ml-1 size-3' />
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

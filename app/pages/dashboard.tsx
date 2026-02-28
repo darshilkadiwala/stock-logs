@@ -22,7 +22,7 @@ export default function Dashboard() {
       {/* Summary Cards Grid */}
       <SummaryCards />
       {/* Content Split: Table & Allocation */}
-      <div className='flex flex-col gap-6 xl:flex-row'>
+      <div className='flex flex-col gap-6 xl:flex-row xl:flex-wrap'>
         {/* Left: Holdings Table */}
         <div className='flex-1'>
           <HoldingsTable />

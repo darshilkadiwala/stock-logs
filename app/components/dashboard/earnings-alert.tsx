@@ -1,18 +1,20 @@
-import { Info } from 'lucide-react';
+import { InfoIcon } from 'lucide-react';
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function EarningsAlert() {
   return (
-    <Card className='border-info/20 bg-info/5 dark:bg-info/10 transition-colors'>
-      <CardContent className='flex items-start gap-3'>
-        <Info className='text-info mt-0.5 size-4 shrink-0' />
-        <div className='flex flex-col gap-1'>
+    <Card className='border-info/20 bg-info/5 dark:bg-info/10 gap-1.5!' size='sm'>
+      <CardHeader>
+        <CardTitle className='flex items-center gap-2'>
+          <InfoIcon className='text-info size-4 shrink-0' />
           <h4 className='text-foreground text-sm font-semibold'>Earnings Alert</h4>
-          <p className='text-muted-foreground text-xs leading-relaxed'>
-            Reliance Industries (RELIANCE) announces quarterly results on Oct 24th. Expect volatility.
-          </p>
-        </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className='text-muted-foreground text-xs leading-relaxed'>
+          Reliance Industries (RELIANCE) announces quarterly results on Oct 24th. Expect volatility.
+        </p>
       </CardContent>
     </Card>
   );

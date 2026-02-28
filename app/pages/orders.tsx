@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs): Route.MetaDescriptors {
 
 export default function OrdersPage() {
   return (
-    <div className='animate-in fade-in slide-in-from-bottom-4 mx-auto flex w-full max-w-350 flex-col gap-8 duration-500'>
+    <section className='animate-in fade-in slide-in-from-bottom-2 space-y-4 duration-500'>
       <PageHeader
         heading='Orders & History'
         description='View and manage your historical transactions and order status.'>
@@ -26,6 +26,6 @@ export default function OrdersPage() {
 
       {/* Data Table */}
       <OrdersTable />
-    </div>
+    </section>
   );
 }

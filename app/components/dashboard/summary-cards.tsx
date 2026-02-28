@@ -8,10 +8,10 @@ export function SummaryCards() {
     <div className='flex flex-col gap-2'>
       {/* Your Investment heading */}
       <span className='text-foreground text-2xl font-semibold tracking-tight tabular-nums'>Your Investment</span>
-      <div className='grid grid-cols-[repeat(4,minmax(200px,25%))] gap-4 overflow-hidden overflow-x-auto'>
+      <div className='grid grid-cols-[repeat(4,minmax(200px,25%))] gap-4 overflow-hidden overflow-x-auto p-2'>
         {/* Card 1: Total Investment */}
-        <Card className='hover:border-profit max-h-24 justify-center transition-colors'>
-          <CardContent className='flex flex-col gap-1 p-5 pb-5'>
+        <Card className='hover:ring-profit max-h-24 justify-center transition-colors'>
+          <CardContent className='gap-1'>
             <p className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>Total Investment</p>
             <p className='text-foreground text-2xl font-semibold tracking-tight tabular-nums'>
               {summaryMetrics.totalInvestment}
@@ -19,8 +19,8 @@ export function SummaryCards() {
           </CardContent>
         </Card>
         {/* Card 2: Current Value */}
-        <Card className='hover:border-profit max-h-24 justify-center transition-colors'>
-          <CardContent className='flex flex-col gap-1 p-5 pb-5'>
+        <Card className='hover:ring-profit max-h-24 justify-center transition-colors'>
+          <CardContent className='gap-1'>
             <p className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>Current Value</p>
             <p className='text-foreground text-2xl font-semibold tracking-tight tabular-nums'>
               {summaryMetrics.currentValue}
@@ -31,9 +31,9 @@ export function SummaryCards() {
         <Card
           className={cn(
             'max-h-24 justify-center transition-colors',
-            summaryMetrics.daysPnL.isProfit ? 'hover:border-profit' : 'hover:border-loss',
+            summaryMetrics.daysPnL.isProfit ? 'hover:ring-profit' : 'hover:ring-loss',
           )}>
-          <CardContent className='flex flex-col gap-1 p-5 pb-5'>
+          <CardContent className='gap-1'>
             <div className='flex items-center justify-between'>
               <p className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>Day's P&L</p>
               <Badge shape='pill' variant={summaryMetrics.daysPnL.isProfit ? 'profit' : 'loss'}>
@@ -50,9 +50,9 @@ export function SummaryCards() {
         <Card
           className={cn(
             'max-h-24 justify-center transition-colors',
-            summaryMetrics.totalPnL.isProfit ? 'hover:border-profit' : 'hover:border-loss',
+            summaryMetrics.totalPnL.isProfit ? 'hover:ring-profit' : 'hover:ring-loss',
           )}>
-          <CardContent className='flex flex-col gap-1 p-5 pb-5'>
+          <CardContent className='gap-1'>
             <div className='flex items-center justify-between'>
               <p className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>Total P&L</p>
               <Badge shape='pill' variant={summaryMetrics.totalPnL.isProfit ? 'profit' : 'loss'}>

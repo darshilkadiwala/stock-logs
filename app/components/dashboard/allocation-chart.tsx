@@ -34,19 +34,19 @@ const chartData = [
 
 export function AllocationChart() {
   return (
-    <Card className='h-full'>
-      <CardHeader className='flex flex-row items-center justify-between'>
+    <Card>
+      <CardHeader className='border-b'>
         <CardTitle className='text-sm font-semibold'>Asset Allocation</CardTitle>
         <CardAction>
-          <Button variant='link' size='sm' className='h-auto p-0 text-xs font-medium'>
+          <Button variant='link' size='sm' className='h-auto'>
             Details
           </Button>
         </CardAction>
       </CardHeader>
 
-      <CardContent className='flex flex-col pb-6'>
+      <CardContent>
         {/* Pure CSS Donut Chart Implementation */}
-        <div className='relative mx-auto mb-8 size-48'>
+        <div className='relative mx-auto size-48'>
           <svg className='h-full w-full -rotate-90' viewBox='0 0 100 100'>
             {/* Background Circle */}
             <circle

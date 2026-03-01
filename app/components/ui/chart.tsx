@@ -105,6 +105,11 @@ interface ChartTooltipContentProps extends Omit<ComponentProps<'div'>, 'content'
   indicator?: 'line' | 'dot' | 'dashed';
   nameKey?: string;
   labelKey?: string;
+  /** Formats the displayed value without replacing the full row (unlike `formatter`). */
+  valueFormatter?: (value: number) => string;
+  /** Render content below the series rows (e.g. derived data like P&L). Receives the tooltip payload. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  footer?: (payload: Array<Record<string, any>>) => ReactNode;
 }
 
 function ChartTooltipContent({
@@ -121,6 +126,8 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
+  valueFormatter,
+  footer,
 }: ChartTooltipContentProps) {
   const { config } = useChart();
 
@@ -209,7 +216,7 @@ function ChartTooltipContent({
                       </div>
                       {item.value && (
                         <span className='text-foreground font-mono font-medium tabular-nums'>
-                          {item.value.toLocaleString()}
+                          {valueFormatter ? valueFormatter(item.value as number) : item.value.toLocaleString()}
                         </span>
                       )}
                     </div>
@@ -219,6 +226,7 @@ function ChartTooltipContent({
             );
           })}
       </div>
+      {footer && payload ? <div className='border-border/50 border-t pt-1.5'>{footer(payload)}</div> : null}
     </div>
   );
 }

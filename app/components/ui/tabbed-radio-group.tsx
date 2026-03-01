@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { Label } from '@/components/ui/label';
 import {
   RadioGroup,
@@ -8,22 +10,22 @@ import {
 import { cn } from '@/lib/tw-utils';
 
 interface TabbedRadioGroupProps extends RadioGroupProps {
-  tabs: Array<Omit<RadioGroupItemProps, 'children' | 'asChild'> & { label: string; id?: string }>;
+  tabs: Array<Omit<RadioGroupItemProps, 'children' | 'asChild'> & { label: ReactNode; id?: string }>;
 }
 export function TabbedRadioGroup({ tabs, className, ...props }: TabbedRadioGroupProps) {
   return (
     <RadioGroup
       className={cn(
-        'group bg-input/50 relative inline-flex h-9 w-fit items-center gap-0 rounded-md px-0.5 py-1 font-medium',
+        'group bg-input/50 relative inline-flex h-9 w-fit items-center gap-1 rounded-md p-1 font-medium',
         className,
       )}
       {...props}>
       {tabs.map(({ label, value, className, id, ...tabProps }) => (
-        <div className='group size-full'>
+        <div className='group size-full' key={`${id}-${value}`}>
           <Label
             htmlFor={id}
             className={cn(
-              'relative z-10 inline-flex h-full min-w-8 cursor-pointer items-center justify-center rounded-sm px-4 text-xs whitespace-nowrap transition-colors select-none',
+              'relative z-10 inline-flex h-full min-w-8 cursor-pointer items-center justify-center rounded-sm px-1 text-xs whitespace-nowrap transition-colors select-none md:px-2',
               'has-data-[state=checked]:bg-primary has-data-[state=checked]:text-primary-foreground has-data-[state=checked]:shadow-xs',
               className,
             )}>

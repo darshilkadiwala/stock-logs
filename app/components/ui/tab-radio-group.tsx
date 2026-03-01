@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/radio-group';
 import { cn } from '@/lib/tw-utils';
 
-interface TabbedRadioGroupProps extends RadioGroupProps {
+interface TabRadioGroupProps extends RadioGroupProps {
   tabs: Array<Omit<RadioGroupItemProps, 'children' | 'asChild'> & { label: ReactNode; id?: string }>;
 }
-export function TabbedRadioGroup({ tabs, className, ...props }: TabbedRadioGroupProps) {
+export function TabRadioGroup({ tabs, className, ...props }: TabRadioGroupProps) {
   return (
     <RadioGroup
       className={cn(
